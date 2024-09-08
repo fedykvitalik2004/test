@@ -40,6 +40,7 @@ public class DocumentManager {
     private Document updatePartially(final Document document) {
         document.setTitle(document.getTitle());
         document.setContent(document.getContent());
+        document.setAuthor(document.getAuthor());
         return document;
     }
 
@@ -83,7 +84,7 @@ public class DocumentManager {
     }
 
     private boolean matchesAuthor(final Document document, final SearchRequest request) {
-        if (Objects.nonNull(request.getAuthorIds())) {
+        if (Objects.nonNull(request.getAuthorIds()) && Objects.nonNull(document.getAuthor())) {
             return request.getAuthorIds().stream()
                     .anyMatch(document.getAuthor().getId()::equals);
         }
@@ -134,13 +135,12 @@ public class DocumentManager {
         private String id;
         private String title;
         private String content;
-        @Setter(value = AccessLevel.PRIVATE)
         private Author author;
         @Setter(value = AccessLevel.PRIVATE)
         private Instant created = Instant.now();
 
         @Builder
-        public Document(String id, String title, String content, @NonNull Author author) {
+        public Document(String id, String title, String content, Author author) {
             this.id = id;
             this.title = title;
             this.content = content;
